@@ -2,21 +2,10 @@
 
 class Item {
 
-private $name;
-public $description = "This is the default description";
+    public string $name;
 
-function __construct($name, $desc)
-{
-    $this->name = $name;
-    $this->description = $desc;
-}
-
-function greeting() {
-    return 'hello I am ';
-}
-
-function selfIntro() {
-    return $this->greeting() . $this->name;
+    public function getListingDescription() {
+        return $this -> name;
 }
 
 }
@@ -49,3 +38,13 @@ class GetSetItem {
     }
     
     }
+
+
+
+
+
+
+
+
+
+

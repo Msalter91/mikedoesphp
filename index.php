@@ -2,23 +2,22 @@
 
 session_start();
 
-include('includes/database.php');
-include 'includes/auth.php';
+require 'classes/Database.php';
+require 'classes/Article.php';
+require 'includes/auth.php';
 
-$conn = getDB();
 
-$sql = "SELECT * 
-        FROM article
-        ORDER BY published_at;";
+//$conn = getDB(); // Database connection replaced with method from newly created object
 
-$results = mysqli_query($conn, $sql);
+$db = new Database();
+$conn = $db -> getConn();
 
-if($results === false) {
-    echo mysqli_error($conn);
-} else {
-    $articles = mysqli_fetch_all($results, MYSQLI_ASSOC);
-}
+$articles = Article::getAll($conn) // Calling on the static method (therefore no need 
+// for to create a new Article object)
+
 ?>
+
+
 <?php require('includes/header.php'); ?>
 <?php if(isLoggedIn()): ?>
     <p>You are logged in </p><a href="logout.php">Logout</a>

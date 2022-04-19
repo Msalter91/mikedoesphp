@@ -12,7 +12,7 @@ if(isset($_GET['id'])) {
 
 } else {
 
-    die("id not suplied, article not found");
+    die("id not supplied, article not found");
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
