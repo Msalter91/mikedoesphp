@@ -6,9 +6,34 @@ class Item {
 
     public function getListingDescription() {
         return $this -> name;
-}
+    }
+
+    private function cantAccessThis() {
+        echo "Can only get this from inside me";
+    }
+
+    protected function canAccessThisKindof() {
+        echo "Can access this in me or my child";
+    }
 
 }
+
+
+// $item = new Item();
+// echo $item->cantAccessThis(); //fatal error 
+// echo $item->canAccessThisKindof(); //fatal error
+
+class betterItem extends Item {
+    public function getProtectedMethod() {
+        $this->canAccessThisKindof();
+    }
+}
+
+$betterItem = new betterItem();
+$betterItem->getProtectedMethod();
+
+
+
 
 class GetSetItem {
 

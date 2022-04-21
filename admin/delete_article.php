@@ -1,9 +1,10 @@
 <?php 
 
-require 'includes/init.php';
+require '../includes/init.php';
 
-$db = new Database();
-$conn = $db->getConn();
+$conn = require '../includes/db.php';
+
+Auth::requireLogin();
 
 if(isset($_GET['id'])) {
     $article = Article::getByID($conn, $_GET['id']);
@@ -32,12 +33,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             
         $article->delete($conn);
 
-        Url::redirect("/mikedoesphp/index.php");
+        Url::redirect("/mikedoesphp/admin/index.php");
                     
 } 
 ?>
 
-<?php require 'includes/header.php'; ?>
+<?php require '../includes/header.php'; ?>
 
 <h2>Delete Article</h2>
 

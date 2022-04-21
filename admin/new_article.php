@@ -1,19 +1,14 @@
 <?php 
 
-require 'includes/init.php';
+require '../includes/init.php';
 
 $article = new Article();
 
-if( !Auth::isLoggedIn()) {
-
-    die('unauthorized');
-
-}
+Auth::requireLogin();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $db = new Database();
-    $conn = $db->getConn();
+    $conn = require '../includes/db.php';
 
     $article->title = $_POST['title'];
     $article->content = $_POST['content'];
@@ -21,7 +16,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if($article->create($conn)) {
 
-        Url::redirect("/mikedoesphp/article.php?id={$article->id}");
+        Url::redirect("/mikedoesphp/admin/article.php?id={$article->id}");
 
     }
 }
@@ -29,8 +24,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <h2>New Article</h2>
 
-<?php require 'includes/header.php';?>
+<?php require '../includes/header.php';?>
 
 <?php require 'includes/article_form.php'; ?>
 
-<?php require 'includes/footer.php'; ?>
+<?php require '../includes/footer.php'; ?>
