@@ -80,6 +80,7 @@ class Article {
         } else {
             $stmt->bindValue(':published_at', $this->published_at, PDO::PARAM_STR);
         }
+        
 
         return $stmt->execute();
         } else {
@@ -120,4 +121,55 @@ class Article {
 
         return empty($this->errors);
     }
+
+    public function delete ($conn) {
+        /**
+         * Delete the current article 
+         * 
+         * @param object $conn connection to the DB
+         * 
+         * @return Boolean true is delete was successful
+         */
+        $sql = "DELETE FROM article
+                WHERE id = :id"; 
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function create($conn) {
+        /**
+         * Creates a new record 
+         * 
+         * @param object connection to the database 
+         * 
+         * @return Boolean true if successful
+         */
+        if($this->validate()) {
+            $sql = "INSERT INTO article (title, content, published_at) 
+                    VALUES (:title, :content, :published_at)"; // template for the sql
+
+        $stmt = $conn->prepare($sql); // Preparing the statement 
+
+        $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
+        $stmt->bindValue(':content', $this->content, PDO::PARAM_STR); // Binding the values
+        
+        if ($this->published_at == '') {
+            $stmt->bindValue(':published_at', null, PDO::PARAM_NULL); 
+        } else {
+            $stmt->bindValue(':published_at', $this->published_at, PDO::PARAM_STR);
+        } // allowing for a field that is nullable 
+
+        if ($stmt->execute()){
+            $this->id = $conn->lastInsertId(); // Giving the object and id 
+            return true;
+        }
+        } else {
+            return false;
+        }
+    }
+
 }

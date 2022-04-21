@@ -1,6 +1,6 @@
 <?php 
 
-include 'includes/url.php';
+require 'includes/init.php';
 
 // Initialize the session.
 // If you are using session_name("something"), don't forget it now!
@@ -23,4 +23,4 @@ if (ini_get("session.use_cookies")) {
 
 session_destroy();
 
-redirect('/mikedoesphp/index.php');
+Url::redirect('/mikedoesphp/index.php');

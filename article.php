@@ -1,18 +1,16 @@
 <?php
 
-require 'classes/Article.php';
-require 'classes/Database.php';
+require 'includes/init.php';
 
 $db = new Database();
 $conn = $db->getConn();
 
-// if(isset($_GET['id'])) {
-//     $article = getArticle($conn, $_GET['id']);
-// } else {
-//     $article = null;
-// }
-
-$article = Article::getByID($conn, $_GET['id'])
+if(isset($_GET['id'])) {
+    // $article = getArticle($conn, $_GET['id']);
+    $article = Article::getByID($conn, $_GET['id']);
+} else {
+    $article = null;
+}
 
 
 ?>

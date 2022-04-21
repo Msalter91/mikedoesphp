@@ -1,17 +1,10 @@
 <?php 
 
-require 'includes/database.php';
-require 'includes/article.php';
-require 'includes/url.php';
-require 'includes/auth.php';
+require 'includes/init.php';
 
-session_start();
+$article = new Article();
 
-$title = '';
-$content ='';
-$published_at = '';
-
-if( ! isLoggedIn()) {
+if( !Auth::isLoggedIn()) {
 
     die('unauthorized');
 
@@ -19,47 +12,17 @@ if( ! isLoggedIn()) {
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $title = $_POST['title'];
-    $content = $_POST['content'];
-    $published_at = $_POST['published_at'];
+    $db = new Database();
+    $conn = $db->getConn();
 
-    $errors = validateArticle($title, $content, $published_at);
-    
-    if(empty($errors)) {
-        $conn = getDB();
+    $article->title = $_POST['title'];
+    $article->content = $_POST['content'];
+    $article->published_at = $_POST['published_at'];
 
-        $sql = "INSERT INTO article (title, content, published_at) VALUES (?, ?, ?)";
-         //  Makes a place holder for the prepared statement 
+    if($article->create($conn)) {
 
-         $stmt = mysqli_prepare($conn, $sql);
+        Url::redirect("/mikedoesphp/article.php?id={$article->id}");
 
-         if ($stmt === false) {
-
-            echo mysqli_error($conn);
-
-        } else {
-
-            if ($published_at == '') {
-                $published_at = null;
-            }
-
-            mysqli_stmt_bind_param($stmt, "sss", $title, $content, $published_at);
-
-            if (mysqli_stmt_execute($stmt)) {
-
-                $id = mysqli_insert_id($conn);
-                echo "Inserted record with ID: $id";
-
-
-                redirect("/mikedoesphp/article.php?id=$id");
-
-
-            } else {
-
-                echo mysqli_stmt_error($stmt);
-
-            }
-        }
     }
 }
 ?>

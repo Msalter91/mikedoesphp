@@ -1,11 +1,6 @@
 <?php
 
-session_start();
-
-require 'classes/Database.php';
-require 'classes/Article.php';
-require 'includes/auth.php';
-
+require 'includes/init.php';
 
 //$conn = getDB(); // Database connection replaced with method from newly created object
 
@@ -19,7 +14,7 @@ $articles = Article::getAll($conn) // Calling on the static method (therefore no
 
 
 <?php require('includes/header.php'); ?>
-<?php if(isLoggedIn()): ?>
+<?php if(Auth::isLoggedIn()): ?>
     <p>You are logged in </p><a href="logout.php">Logout</a>
     <p><a href="new_article.php">New Article</a></p>
 <?php else: ?>

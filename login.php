@@ -3,13 +3,16 @@
 // Starts or resumes a session in the browser
 session_start();
 
-include 'includes/url.php';
+require 'includes/init.php';
+
+$db = new Database();
+$conn = $db->getConn();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if($_POST['username'] == 'mike' && $_POST['password'] == 'secret') {
+    if( User::authenticate($conn, $_POST['username'], $_POST['password'])) {
         session_regenerate_id(true);
         $_SESSION['is_logged_in'] = true;
-        redirect('/mikedoesphp/index.php');
+        Url::redirect('/mikedoesphp/index.php');
     } else {
         $error = 'Invalid login';
     }
