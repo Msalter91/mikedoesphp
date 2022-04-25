@@ -14,14 +14,14 @@ class Database {
      * @return PDO object Connection to the database server
      */
     public function getConn () {
-
+        
         $db_host = "localhost";
         $db_name = "cms";
         $db_user = "msalter";
-        $db_pass = "MPcsU/olSZa@NO2M";
+        $db_pass = "";
 
         $dsn = 'mysql:host=' . $db_host . ';dbname=' . $db_name. ';charset=utf8';
-
+        
         try {
             $db = new PDO($dsn, $db_user, $db_pass);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

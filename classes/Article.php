@@ -8,8 +8,7 @@ class Article {
     public $published_at;
 
     public $errors = [];
-
-
+    
     /**
      * Get all the articles
      * 
@@ -25,6 +24,23 @@ class Article {
         $results = $conn->query($sql);
 
         return $results->fetchAll(PDO::FETCH_ASSOC); 
+    }
+
+    public static function getPage($conn, $limit, $offset) {
+        $sql = "SELECT *
+        FROM article 
+        ORDER BY published_at
+        LIMIT :limit
+        OFFSET :offset";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -170,6 +186,12 @@ class Article {
         } else {
             return false;
         }
+    }
+
+    public static function getTotal ($conn) {
+        return 
+        $conn->query('SELECT COUNT(*) FROM article')->fetchColumn();
+
     }
 
 }

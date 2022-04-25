@@ -1,8 +1,5 @@
 <?php 
 
-// Starts or resumes a session in the browser
-session_start();
-
 require 'includes/init.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
