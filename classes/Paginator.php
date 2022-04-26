@@ -8,7 +8,7 @@ class Paginator {
     public $previous; 
     public $next; 
 
-    public function __construct($page, $records_per_page, $totalRecords) {
+    public function __construct(int $page, int $records_per_page, int $totalRecords) {
         $this->limit = $records_per_page;
         $page = filter_var($page, FILTER_VALIDATE_INT, [
             'options' => [

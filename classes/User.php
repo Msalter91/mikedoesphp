@@ -20,7 +20,7 @@ class User {
     public $password;
 
 
-    public static function authenticate($conn, $username, $password) {
+    public static function authenticate(object $conn, string $username, string $password) {
 
         $sql = "SELECT * from user where username = :username"; // SQL statement template for the prepared statement 
 

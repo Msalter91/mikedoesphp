@@ -6,6 +6,7 @@ class Article {
     public $title;
     public $content;
     public $published_at;
+    public $image_file;
 
     public $errors = [];
     
@@ -16,7 +17,7 @@ class Article {
      * 
      * @return array An associative array of the article records 
      */
-    public static function getAll($conn) {
+    public static function getAll(object $conn) {
         $sql = "SELECT * 
         FROM article
         ORDER BY published_at;";
@@ -26,7 +27,7 @@ class Article {
         return $results->fetchAll(PDO::FETCH_ASSOC); 
     }
 
-    public static function getPage($conn, $limit, $offset) {
+    public static function getPage(object $conn, int $limit, int $offset) {
         $sql = "SELECT *
         FROM article 
         ORDER BY published_at
@@ -52,7 +53,7 @@ class Article {
      * 
      * @return mixed An Article object containing the article with that id. Null if not found
      */
-    public static function getByID($conn, $id, $columns = "*") {
+    public static function getByID(object $conn, int $id, string $columns = "*") {
     $sql = "SELECT $columns
             FROM article
             WHERE id = :id";
@@ -74,7 +75,7 @@ class Article {
         }
         // executing the function
 }
-    public function update($conn) {
+    public function update(object $conn) {
         // This function isn't static because it will be acting on an individual instance
         // of a function. 
 
@@ -138,7 +139,7 @@ class Article {
         return empty($this->errors);
     }
 
-    public function delete ($conn) {
+    public function delete (object $conn) {
         /**
          * Delete the current article 
          * 
@@ -156,7 +157,7 @@ class Article {
         return $stmt->execute();
     }
 
-    public function create($conn) {
+    public function create(object $conn) {
         /**
          * Creates a new record 
          * 
@@ -188,10 +189,23 @@ class Article {
         }
     }
 
-    public static function getTotal ($conn) {
+    public static function getTotal (object $conn) {
         return 
         $conn->query('SELECT COUNT(*) FROM article')->fetchColumn();
 
+    }
+
+    public function setImageField(object $conn, string $filename){
+        $sql = "UPDATE article 
+                SET image_file = :image_file
+                WHERE id = :id";
+        
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindValue(':image_file', $filename, $filename == null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        return $stmt->execute();   
     }
 
 }

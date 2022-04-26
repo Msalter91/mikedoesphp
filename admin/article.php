@@ -17,10 +17,15 @@ if(isset($_GET['id'])) {
         <?php if($article): ?>
             <article>
                 <h2><?= htmlspecialchars($article->title); ?></h2>
+                <?php if($article->image_file): ?>
+                    <img alt="Image for the article" src="../uploads/<?=$article->image_file?>">
+                <?php endif; ?>
                     <p><?= htmlspecialchars($article->content); ?></p>
                 </article>
 
                 <a href="edit_article.php?id=<?= $article->id ?>"> Edit me </a>
+                <br>
+                <a href="edit_article_image.php?id=<?= $article->id ?>"> Edit image</a>
                 <br>
                 <a href="delete_article.php?id=<?= $article->id ?>"> Delete me </a>
         <?php else: ?>

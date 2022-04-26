@@ -4,4 +4,6 @@ spl_autoload_register(function ($class) {
     require dirname(__DIR__) . "/classes/{$class}.php";
 });
 
-session_start();
+if(! isset($_SESSION)) {
+    session_start();
+}

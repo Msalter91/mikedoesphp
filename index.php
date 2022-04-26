@@ -3,12 +3,6 @@
 require 'includes/init.php';
 $conn = require 'includes/db.php';
 
-// if(isset($_GET['page'])){
-//     $paginator = new Paginator($_GET['page'],4);
-// } else {
-//     $paginator = new Paginator(1,4);
-// }
-
 $paginator = new Paginator($_GET['page'] ?? 1, 4, Article::getTotal($conn)); // null coalessence operator
 // if $_GET['page'] is null use 1, else use $_GET['page']
 
