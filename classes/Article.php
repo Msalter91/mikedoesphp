@@ -28,11 +28,17 @@ class Article {
     }
 
     public static function getPage(object $conn, int $limit, int $offset) {
-        $sql = "SELECT *
+        $sql = "
+        SELECT a.*, category.name AS category_name
+        FROM (SELECT *
         FROM article 
         ORDER BY published_at
         LIMIT :limit
-        OFFSET :offset";
+        OFFSET :offset) AS a
+        LEFT JOIN article_category
+        ON a.id = article_category.article_id
+        LEFT JOIN category
+        ON article_category.category_id = category.id";
 
         $stmt = $conn->prepare($sql);
 
@@ -41,7 +47,28 @@ class Article {
 
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $articles=[];
+
+        $previous_id = null;
+
+        foreach($results as $row) {
+
+            $article_id = $row['id'];
+
+            if($article_id != $previous_id) {
+                $row['category_names'] = [];
+
+                $articles[$article_id] = $row;
+            }
+
+            $articles[$article_id]['category_names'][] = $row['category_name'];
+
+            $previous_id = $article_id;
+
+        }
+        return $articles;
     }
 
     /**
@@ -75,6 +102,49 @@ class Article {
         }
         // executing the function
 }
+
+    public static function getWithCategories(object $conn, int $id) {
+        $sql = "SELECT article.*, category.name AS category_name 
+                from article 
+                LEFT JOIN article_category
+                on article.id = article_category.article_id
+                LEFT JOIN category
+                on article_category.category_id = category.id
+                WHERE article.id = :id";
+                // Selects everything from the article table and the name column from the category table
+                // joins article onto the intemediary table where the id on the article table has a corresponding article id on the intemediary 
+                // the joins the category table to the same intemediary where the category id has a corresponding id in the intermediary 
+                // but only where the id of the article matches the one that is passed into this function
+                $stmt = $conn->prepare($sql);
+
+                $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+
+                $stmt->execute();
+
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // currently fetching as ASSOC becuase the object isn't set up for this yet
+
+
+    }
+
+    public function getCategories($conn) {
+        $sql = "SELECT category.*
+        FROM category
+        JOIN article_category
+        ON category.id = article_category.category_id
+        WHERE article_id = :id";
+
+        $stmt= $conn->prepare($sql);
+
+        $stmt->bindValue(":id", $this->id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
     public function update(object $conn) {
         // This function isn't static because it will be acting on an individual instance
         // of a function. 
@@ -206,6 +276,49 @@ class Article {
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         return $stmt->execute();   
+    }
+
+    public function setCategories ($conn, $ids) {
+        if($ids){
+            $sql = "INSERT IGNORE INTO article_category (article_id, category_id)
+                    VALUES ";
+            // using ignore here overwrites overwrites the old records that would share the same primary keys
+            // if a category is added for example
+
+            $values = [];
+
+            foreach($ids as $id) {
+                $values[] = "($this->id, ?)";
+            }
+
+            $sql .= implode(", ", $values);
+
+            $stmt = $conn->prepare($sql);
+
+            foreach ($ids as $i => $id) {
+                $stmt->bindValue($i + 1, $id, PDO::PARAM_INT);
+            }
+            $stmt->execute();
+
+        }
+
+        $sql = "DELETE FROM article_category
+                WHERE article_id = {$this->id}";
+
+        if ($ids){
+            $placeholders = array_fill(0, count($ids), '?');
+
+            $sql .= " AND category_id NOT IN (" . implode(", ",$placeholders) . ")";
+        }
+
+        $stmt = $conn->prepare($sql);
+
+        foreach ($ids as $i => $id) {
+            $stmt->bindValue($i + 1, $id, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        
     }
 
 }
