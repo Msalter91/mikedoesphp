@@ -39,8 +39,14 @@ $articles = Article::getPage($conn, $paginator->limit, $paginator->offset); // C
                             <?= htmlspecialchars($article['title']); ?></a>
                         </td>
                         <td>
-                            <?= $article["published_at"] ?? "Unplublished" ?>
+
+                            <?php if (! $article["published_at"]): ?>
+                            Unpublished
                             <button class="publish" data-id="<?= $article["id"]?>">Publish</button>
+                            <?php else: ?>
+                            <?=$article["published_at"] ?>
+                            <?php endif ;?>
+
                         </td>
                         
                   </tr>
