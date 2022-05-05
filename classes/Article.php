@@ -27,11 +27,15 @@ class Article {
         return $results->fetchAll(PDO::FETCH_ASSOC); 
     }
 
-    public static function getPage(object $conn, int $limit, int $offset) {
+    public static function getPage(object $conn, int $limit, int $offset, $only_published = false) {
+
+        $condition = $only_published ? " WHERE published_at IS NOT NULL " : "";
+
         $sql = "
         SELECT a.*, category.name AS category_name
         FROM (SELECT *
         FROM article 
+        $condition
         ORDER BY published_at
         LIMIT :limit
         OFFSET :offset) AS a
@@ -103,7 +107,7 @@ class Article {
         // executing the function
 }
 
-    public static function getWithCategories(object $conn, int $id) {
+    public static function getWithCategories(object $conn, int $id, $only_published = false) {
         $sql = "SELECT article.*, category.name AS category_name 
                 from article 
                 LEFT JOIN article_category
@@ -115,6 +119,11 @@ class Article {
                 // joins article onto the intemediary table where the id on the article table has a corresponding article id on the intemediary 
                 // the joins the category table to the same intemediary where the category id has a corresponding id in the intermediary 
                 // but only where the id of the article matches the one that is passed into this function
+
+                if($only_published) {
+                    $sql .= " AND article.published_at IS NOT NULL ";
+                }
+
                 $stmt = $conn->prepare($sql);
 
                 $stmt->bindValue(":id", $id, PDO::PARAM_INT);
@@ -194,7 +203,7 @@ class Article {
         }
 
         if($this->published_at != '') {
-            $date_time = date_create_from_format('Y-m-d H:i', $this->published_at);
+            $date_time = date_create_from_format('Y-m-d', $this->published_at);
             
             if($date_time === false) {
                 $this->errors[] = "Invalid date and time";
@@ -259,13 +268,14 @@ class Article {
         }
     }
 
-    public static function getTotal (object $conn) {
+    public static function getTotal (object $conn, $only_published = false) {
+        $condition = $only_published ? " WHERE published_at IS NOT NULL " : "";
         return 
-        $conn->query('SELECT COUNT(*) FROM article')->fetchColumn();
+        $conn->query("SELECT COUNT(*) FROM article$condition")->fetchColumn();
 
     }
 
-    public function setImageField(object $conn, string $filename){
+    public function setImageField(object $conn, $filename){
         $sql = "UPDATE article 
                 SET image_file = :image_file
                 WHERE id = :id";
@@ -319,6 +329,24 @@ class Article {
         $stmt->execute();
 
         
+    }
+
+    public function publishArticle($conn) {
+
+        $sql = "UPDATE article 
+        SET published_at = :published_at
+        WHERE id = :id";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        $published_at = date("Y-m-d H:i:s");
+        $stmt->bindValue(":published_at", $published_at, PDO::PARAM_STR);
+
+        if($stmt->execute()) {
+            return $published_at;
+        }
+
     }
 
 }

@@ -6,31 +6,31 @@
     </ul>
 <?php endif; ?>
 
-<form method="post">
-    <div>
+<form method="post" id="form-article">
+    <div class="form-group">
         <label for="title">Title</label>
-        <input name="title" id="title" type="text" placeholder="Article title" value= '<?= htmlspecialchars($article->title); ?>' >
+        <input class="form-control" name="title" id="title" type="text" placeholder="Article title" value= '<?= htmlspecialchars($article->title); ?>' >
     </div>
-    <div>
+    <div class="form-group">
         <label for="content[]">Content</label>
-        <textarea name="content" rows="4" cols="40" id="content" placeholder="Article content">
+        <textarea class="form-control" name="content" rows="4" cols="40" id="content" placeholder="Article content">
             <?= htmlspecialchars($article->content); ?>
         </textarea>
     </div>
-    <div>
+    <div class="form-group">
         <label for="published_at">Publication date and time</label>
-        <input type="datetime-local" name="published_at" id="published_at" value='<?= htmlspecialchars($article->published_at); ?>'>
+        <input class="form-control" name="published_at" id="published_at" value='<?= htmlspecialchars($article->published_at); ?>'>
     </div>
     <fieldset>
         <legend>Categories</legend>
             <?php foreach ($categories as $category) :?>
-                <div>
-                    <label for="<?=$category['id']?>"><?=htmlspecialchars($category['name'])?></label>
-                    <input type="checkbox" name="category[]" id="<?=$category['id']?>" value="<?=$category['id']?>" 
+                <div class="form-check">
+                    <label class="form-check-label" for="<?=$category['id']?>"><?=htmlspecialchars($category['name'])?></label>
+                    <input class="form-check-input" type="checkbox" name="category[]" id="<?=$category['id']?>" value="<?=$category['id']?>" 
                     <?php if(in_array($category['id'], $category_ids)): ?> checked <?php endif; ?>
                     >
                 </div>
             <?php endforeach; ?>
     </fieldset>
-    <button>Save</button>
+    <button class="btn">Save</button>
 </form>

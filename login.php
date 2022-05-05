@@ -23,13 +23,15 @@ include 'includes/header.php';
     <?= $error ?>
 <?php endif; ?>
 <form method='post'>
-    <label for='username'>Username</label>
-    <input type='text' id='username' name='username'>
-
-    <label for='password'>Password</label>
-    <input type='password' id='password' name='password'>
-
-    <button>Login</button>
+    <div class="form-group">
+        <label for='username'>Username</label>
+        <input type='text' id='username' name='username' class="form-control">
+    </div>
+    <div class="form-group">
+        <label for='password'>Password</label>
+        <input type='password' id='password' name='password' class="form-control">
+    </div>
+    <button class="btn">Login</button>
 </form>
 
 <?php require 'includes/footer.php'; ?>

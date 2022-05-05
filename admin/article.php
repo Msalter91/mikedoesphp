@@ -17,6 +17,7 @@ if(isset($_GET['id'])) {
         <?php if($article): ?>
             <article>
                 <h2><?= htmlspecialchars($article[0]['title']); ?></h2>
+                <?= $article[0]["published_at"] ?? "Unplublished" ?>
                 <?php if($article[0]['category_name']): ?>
                     <p> categories:
                         <?php foreach ($article as $a) : ?>
@@ -25,7 +26,7 @@ if(isset($_GET['id'])) {
                     </p>
                 <?php endif; ?>
                 <?php if($article[0]['image_file']): ?>
-                    <img alt="Image for the article" src="uploads/<?=$article[0]['image_file']?>">
+                    <img alt="Image for the article" src="/mikedoesphp/uploads/<?=$article[0]['image_file']?>">
                 <?php endif; ?>
                     <p><?= htmlspecialchars($article[0]['content']); ?></p>
                 </article>

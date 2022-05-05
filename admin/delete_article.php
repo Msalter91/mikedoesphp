@@ -17,19 +17,6 @@ if(isset($_GET['id'])) {
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    
-            // $sql = "DELETE FROM article
-            //         WHERE id = :id"; 
-    
-            //  $stmt = mysqli_prepare($conn, $sql);
-    
-            //  if ($stmt === false) {
-    
-            //     echo mysqli_error($conn);
-            // } else     
-            //     mysqli_stmt_bind_param($stmt, "i", $id); * Old Proceedural style for delete 
-
             
         $article->delete($conn);
 
@@ -43,7 +30,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Delete Article</h2>
 
 <form method="post">
-    <button>Delete me</button>
+    <button class="deleteButton">Delete me</button>
     <a href="article.php?id=<?=$article->id ?>">Cancel</a>
 </form>
 

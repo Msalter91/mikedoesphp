@@ -37,13 +37,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php require '../includes/header.php';?>
 
 <?php if($article->image_file): ?>
-    <img alt="Image for the article" src="../uploads/<?=$article->image_file?>">
+    <img alt="Image for the article" src="/mikedoesphp/uploads/<?=$article->image_file?>">
 <?php endif; ?>
 
 <form method="post">
     <p>Are you sure you want to delete this image?</p>
 
-    <button>Delete</button>
+    <button class="deleteButton">Delete</button>
     <a href="/mikedoesphp/admin/edit_article_image.php?id=<?=$article->id?>">Cancel</a>
 
 </form>
