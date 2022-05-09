@@ -20,6 +20,10 @@ $("button.publish").on("click", function(e) {
     .done(function(data) {
         button.parent().html(data);
     })
+
+    .fail(function(data) {
+        alert("Oops we have an error")
+    })
 });
 
 $.validator.addMethod("dateTime", function (value, element) {

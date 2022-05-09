@@ -10,8 +10,8 @@ class ImageUpload {
      * 2. Uploader which would create the path and move the image 
      */
 
-    public $filename;
-    public $destination;
+    public string $filename;
+    public string $destination;
     
     public function validateUpload () {
         if(empty($_FILES)){

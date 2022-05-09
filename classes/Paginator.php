@@ -2,13 +2,15 @@
 
 class Paginator {
 
-    public $limit; // limit passed in during the constructor
-    public $offset; // offset passed in during the constructor 
+    public int|string $limit; // limit passed in during the constructor
+    public int|string $offset; // offset passed in during the constructor
 
-    public $previous; 
-    public $next; 
+    public  int|null $previous;
+    public  int|null $next;
 
     public function __construct(int $page, int $records_per_page, int $totalRecords) {
+        $this->previous = null;
+        $this->next = null;
         $this->limit = $records_per_page;
         $page = filter_var($page, FILTER_VALIDATE_INT, [
             'options' => [

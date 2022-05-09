@@ -2,13 +2,12 @@
 
 class Article {
 
-    public $id;
-    public $title;
-    public $content;
-    public $published_at;
-    public $image_file;
+    public string $id;
+    public string $title;
+    public string $content;
+    public string $published_at;
 
-    public $errors = [];
+    public array $errors = [];
     
     /**
      * Get all the articles
@@ -91,7 +90,7 @@ class Article {
 
     $stmt = $conn->prepare($sql);
     // Using the prepare method on the connection object 
-    // to prepare the statment above
+    // to prepare the statement above
 
    
       $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -136,7 +135,7 @@ class Article {
 
     }
 
-    public function getCategories($conn) {
+    public function getCategories(object $conn) {
         $sql = "SELECT category.*
         FROM category
         JOIN article_category
@@ -275,7 +274,7 @@ class Article {
 
     }
 
-    public function setImageField(object $conn, $filename){
+    public function setImageField(object $conn, ?string $filename){
         $sql = "UPDATE article 
                 SET image_file = :image_file
                 WHERE id = :id";
@@ -288,7 +287,7 @@ class Article {
         return $stmt->execute();   
     }
 
-    public function setCategories ($conn, $ids) {
+    public function setCategories (object $conn, array $ids) {
         if($ids){
             $sql = "INSERT IGNORE INTO article_category (article_id, category_id)
                     VALUES ";
@@ -331,7 +330,7 @@ class Article {
         
     }
 
-    public function publishArticle($conn) {
+    public function publishArticle(object $conn) {
 
         $sql = "UPDATE article 
         SET published_at = :published_at

@@ -2,7 +2,7 @@
 
 class Url {
     /**
- * @param string $path for the URL for the redirct 
+ * @param string $path for the URL for the redirect
  * 
  * @return void
  */
@@ -15,7 +15,7 @@ public static function redirect(string $path) {
         $protocol ='http';
     }
 
-    header("Location: ${protocol}://{$_SERVER['HTTP_HOST']}${path}");
+    header("Location: $protocol://{$_SERVER['HTTP_HOST']}${path}");
     exit;
 }
 }

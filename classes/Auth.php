@@ -7,23 +7,26 @@ class Auth {
      * 
      * @return Boolean True if user is logged in, false is not
     */
-    public static function isLoggedIn() {
+    public static function isLoggedIn(): bool
+    {
         return (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in']);
     } 
 
-    public static function requireLogin() {
+    public static function requireLogin(): void
+    {
         if (!static::isLoggedIn()) {
             die('unauthorized');
         }
     }
 
-    public static function login() {
+    public static function login(): void
+    {
         session_regenerate_id(true);
         $_SESSION['is_logged_in'] = true;
     }
 
     public static function logout() {
-        // Unset all of the session variables.
+        // Unset all the session variables.
 $_SESSION = array();
 
 // If it's desired to kill the session, also delete the session cookie.

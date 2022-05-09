@@ -6,10 +6,6 @@ Auth::requireLogin();
 
 $conn = require '../includes/db.php';
 
-//$conn = getDB(); // Database connection replaced with method from newly created object
-
-// $db = new Database();
-// $conn = $db -> getConn();
 
 $paginator = new Paginator($_GET['page'] ?? 1, 6, Article::getTotal($conn)); // null coalessence operator
 // if $_GET['page'] is null use 1, else use $_GET['page']

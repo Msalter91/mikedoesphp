@@ -1,7 +1,6 @@
 <?php 
 
 require 'includes/init.php';
-require 'config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

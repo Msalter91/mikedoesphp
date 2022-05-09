@@ -13,22 +13,30 @@ class Database {
      * 
      * @return PDO object Connection to the database server
      */
-    public function getConn () {
-        
-        $db_host = "localhost";
-        $db_name = "cms";
-        $db_user = "msalter";
-        $db_pass = "";
 
-        $dsn = 'mysql:host=' . $db_host . ';dbname=' . $db_name. ';charset=utf8';
+     protected string $db_host;
+     protected string $db_name;
+     protected string $db_user;
+     protected string $db_pass;
+
+    public function getConn () {
+
+        $dsn = 'mysql:host=' . $this->db_host . ';dbname=' . $this->db_name. ';charset=utf8';
         
         try {
-            $db = new PDO($dsn, $db_user, $db_pass);
+            $db = new PDO($dsn, $this->db_user, $this->db_pass);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $db;
         } catch (PDOException $e) {
             echo $e->getMessage();
+            var_dump($e);
             die();
         }
     }
+    public function __construct(string $host, string $name, string $user, string $password){
+        $this->db_host = $host;
+        $this->db_name = $name;
+        $this->db_user = $user;
+        $this->db_pass = $password;
+   }
 }
